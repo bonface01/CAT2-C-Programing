@@ -6,99 +6,61 @@ DESCRIPTION :
 Program that reads 10 integers from the user and writes them to a file named "input.txt".
 It then reads the integers from the file, calculates the sum and average, 
 writes the results to another file named "output.txt", 
-and finally displays the contents of both files with proper error handling.
+and finally displays the contents of both files .
 */
+
 
 #include <stdio.h>
 
-// Function prototypes
-void writeInput();
-void processNumbers();
-void displayFiles();
-
 int main(void) {
-    writeInput();
-    processNumbers();
-    displayFiles();
-    return 0;
-}
+    FILE *fpIn, *fpOut;
+    int num, i, sum = 0, count = 0;
+    float avg;
+    char ch;
 
-//  Function to write 10 integers to "input.txt"
-void writeInput() {
-    FILE *fp;
-    int num, i;
-    
-    fp = fopen("input.txt", "w");
-    if (fp == NULL) {
-        printf("Error opening file for writing!\n");
-        return;
-    }
-
+    // Step 1: Write 10 integers to input.txt
+    fpIn = fopen("C:\\Users\\name\\Desktop\\cat2\\input.txt", "w");
     printf("Enter 10 integers:\n");
     for (i = 0; i < 10; i++) {
         printf("Number %d: ", i + 1);
         scanf("%d", &num);
-        fprintf(fp, "%d\n", num);
+        fprintf(fpIn, "%d\n", num);
     }
-
-    fclose(fp);
+    fclose(fpIn);
     printf("\nData successfully written to input.txt\n");
-}
 
-//  Function to calculate sum & average and write to "output.txt"
-void processNumbers() {
-    FILE *fpIn, *fpOut;
-    int num, count = 0, sum = 0;
-    float avg;
-
-    fpIn = fopen("input.txt", "r");
-    fpOut = fopen("output.txt", "w");
-
-    if (fpIn == NULL || fpOut == NULL) {
-        printf("Error opening file(s)!\n");
-        return;
-    }
+    // Step 2: Read integers, calculate sum and average, write to output.txt
+    fpIn = fopen("C:\\Users\\name\\Desktop\\cat2\\input.txt", "r");
+    fpOut = fopen("C:\\Users\\name\\Desktop\\cat2\\output.txt", "w");
 
     while (fscanf(fpIn, "%d", &num) != EOF) {
         sum += num;
         count++;
     }
-
-    if (count > 0)
-        avg = (float)sum / count;
-    else
-        avg = 0;
-
-    fprintf(fpOut, "Sum = %d\nAverage = %.2f\n", sum, avg);
-
     fclose(fpIn);
+
+    avg = (float)sum / count;
+    fprintf(fpOut, "Sum = %d\nAverage = %.2f\n", sum, avg);
+    fclose(fpOut);
+    printf("Sum and average written to output.txt\n");
+
+    // Step 3: Display contents of input.txt
+   
+    printf("Contents of input.txt:\n");
+    
+    fpIn = fopen("C:\\Users\\name\\Desktop\\cat2\\input.txt", "r");
+    while ((ch = fgetc(fpIn)) != EOF)
+        putchar(ch);
+    fclose(fpIn);
+
+    // Step 4: Display contents of output.txt
+   
+    printf("Contents of output.txt:\n");
+    
+    fpOut = fopen("C:\\Users\\name\\Desktop\\cat2\\output.txt", "r");
+    while ((ch = fgetc(fpOut)) != EOF)
+        putchar(ch);
     fclose(fpOut);
 
-    printf("Sum and average written to output.txt\n");
-}
-
-//  Function to display both files
-void displayFiles() {
-    FILE *fp;
-    char ch;
-
-    printf("\nContents of input.txt:\n");
-    fp = fopen("input.txt", "r");
-    if (fp == NULL) {
-        printf("Error reading input.txt\n");
-        return;
-    }
-    while ((ch = fgetc(fp)) != EOF)
-        putchar(ch);
-    fclose(fp);
-
-    printf("\nContents of output.txt:\n");
-    fp = fopen("output.txt", "r");
-    if (fp == NULL) {
-        printf("Error reading output.txt\n");
-        return;
-    }
-    while ((ch = fgetc(fp)) != EOF)
-        putchar(ch);
-    fclose(fp);
+    return 0;
 }
